@@ -1,0 +1,57 @@
+- name: play Variables
+  hosts: all
+  vars:
+    URL: play.example.com
+  tasks:
+    - name: Access URL in task1
+      ansible.builtin.debug:
+        Msg: Url in Task = {{URL}}
+
+    - name: Access URL in task1
+        ansible.builtin.debug:
+          Msg: Url in Task = {{URL}}
+
+## Declare Variable in play level then all the task  can access the variable
+
+-name: File level Variable
+ hosts: all
+ vars_files:
+   - sample.vars.yml
+ tasks:
+   - name: Access URL
+     ansible.builtin.debug:
+       Msg: Url = {{URL}}
+
+## Declare Variable in File level then all the task  can access the variable
+
+-name: Task level Variable
+  hosts: all
+  tasks:
+    - name: Access URL from Task Var
+      ansible.builtin.debug:
+        Msg: Url = {{URL}}
+      vars:
+        URL: task.sample.com
+
+## Declare Variable in Task level then all the task  can access the variable,scope is only the same task.
+
+## vi ../inv
+## Insert : URL=inventory.example.com
+
+-name: Inventory level Variable
+  hosts: all
+  tasks:
+    - name: Access URL from inventory File
+      ansible.builtin.debug:
+        Msg: Url = {{URL}}
+
+
+-name: CLI level Variable
+  hosts: all
+  tasks:
+    - name: Access CLI Variable
+      ansible.builtin.debug:
+        Msg: Url = {{URL}}
+
+## To access CLI variable we need to use the -e option with Variable value, example as below
+## ansible-playbook -i ../inv -u centos -k 02-vars.yml -e URL=cli.google.com
