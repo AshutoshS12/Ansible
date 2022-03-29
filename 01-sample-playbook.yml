@@ -13,3 +13,4 @@
   hosts: all
 
   ## ansible-playbook -i ../inv -u centos -k 01.sample.playbook.yml
+
