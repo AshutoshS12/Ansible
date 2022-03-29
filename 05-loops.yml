@@ -1,0 +1,38 @@
+- name: Demo on Lopps
+  hosts: localhost
+  tasks:
+    - name: Print All Fruits
+      debug:
+        msg: "Fruit Name= {{item}}"
+      loop:
+        - apple
+        - banana
+        - orange
+
+Or
+
+- name: Demo on Lopps
+  hosts: localhost
+  var:
+    FRUITS: [ "apple", "banana", "orange" ]
+  tasks:
+    - name: Print All Fruits
+      debug:
+        msg: "Fruit Name= {{item}}"
+      loop: "{{FRUITS}}"
+
+
+- name: Demo on map values of Loop
+  hosts: localhost
+  tasks:
+    - name: Print
+      debug:
+        msg: "Course Name = {{item.name}}, Timing: {{item.timing}}"
+      loop:
+        - name: DevOps
+          timing: 6am
+        -name: AWS
+          timing: 8am
+
+
+
