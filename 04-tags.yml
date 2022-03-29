@@ -1,0 +1,22 @@
+- name: Demo on Tags
+  hosts: localhost
+  tasks:
+    - name: Print the first message
+      ansible.builtin.debug:
+        msg: "Fruits"
+      tags:
+        - fruits
+        - fruit
+
+    - name: Print the second message
+      ansible.builtin.debug:
+        msg: "Groceries"
+      tags:
+        - groceries
+        - cerals
+
+
+## git pull &>/dev/null; ansible-playbook 04-tags.yml -t fruits (Example of Tag, How we can use tag to run the task and print -
+## - the message. Generally Tags is used to run a single task instead of running multiple tasks
+
+## Tags can be applied on plays in playbook as well.
