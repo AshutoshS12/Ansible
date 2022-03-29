@@ -1,0 +1,36 @@
+- name: Copy Mongodb repo file
+  ansible.builtin.copy:
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
+    remote_src: yes
+
+- name: Install MongoDb
+  ansible.builtin.yum:
+    name: mongodb-org
+    state: present
+
+- name: Update the listen Ip address in config file
+  ansible.builtin.replace:
+    path: /etc/mongod.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
+
+- name: Statrt MongoDb service and Enable
+  ansible.builtin.systemd:
+    name: mongod
+    state: restarted
+    enabled: yes
+
+- name: Download Schema for MongoDb
+  include_role:
+    name: common
+    tasks_from: download
+
+- name: Load Schema
+  community.mongodb.mongodb_shell:
+    file: /tmp/mongodbp-main/{{item}}.js
+    idempotent: yes
+  loop:
+    - catalogue
+    - users
+
