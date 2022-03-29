@@ -1,0 +1,6 @@
+- name: Printing Hello using role
+  ansible.builtin.debug:
+    msg: "Hello"
+- name: variable
+  ansible.builtin.debug:
+    msg: "{{MSG}}"
