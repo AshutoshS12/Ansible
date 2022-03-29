@@ -13,18 +13,18 @@
 
 ## Declare Variable in play level then all the task  can access the variable
 
--name: File level Variable
- hosts: all
- vars_files:
-   - sample.vars.yml
- tasks:
-   - name: Access URL
-     ansible.builtin.debug:
-       Msg: Url = {{URL}}
+- name: File level Variable
+  hosts: all
+  vars_files:
+    - sample.vars.yml
+  tasks:
+    - name: Access URL
+      ansible.builtin.debug:
+        Msg: Url = {{URL}}
 
 ## Declare Variable in File level then all the task  can access the variable
 
--name: Task level Variable
+- name: Task level Variable
   hosts: all
   tasks:
     - name: Access URL from Task Var
@@ -38,7 +38,7 @@
 ## vi ../inv
 ## Insert : URL=inventory.example.com
 
--name: Inventory level Variable
+- name: Inventory level Variable
   hosts: all
   tasks:
     - name: Access URL from inventory File
@@ -46,7 +46,7 @@
         Msg: Url = {{URL}}
 
 
--name: CLI level Variable
+- name: CLI level Variable
   hosts: all
   tasks:
     - name: Access CLI Variable
@@ -54,4 +54,36 @@
         Msg: Url = {{URL}}
 
 ## To access CLI variable we need to use the -e option with Variable value, example as below
-## ansible-playbook -i ../inv -u centos -k 02-vars.yml -e URL=cli.google.com
+## ansible-playbook -i ../inv -u centos -k 02-vars.yml -e URL=cli.google.com,but when declared it will replace the value all across
+
+- name: Print Facts
+  hosts: all
+  vars:
+    ansible_distribution: sample
+  tasks:
+    - name: Print a Fact
+      ansible.builtin.debug:
+        msg: "HOST OS = {{ansible_distribution}}"
+## Generally, It's a good practice we don't start our user variable with ansible_ , because those are system facts fromm ansible
+
+- name: Runtime Variable
+  hosts: all
+  tasks:
+    - name: Get uptime command output
+      ansible.builtin.shell: uptime
+      register: OUT
+      ## OUT is a variable
+    - name: Print Out
+      ansible.builtin.debug:
+        msg: "{{OUT.stdout}}"
+    - name: Set Fact
+      ansible.builtin.debug:
+        UPTIME_OUTPUT: "{{OUT.stdout}}"
+
+## Variable values need not to be quoted while declaring
+## Variable while accessing also need not to be quoted, Unless if the value is starting with variable.
+## Meaning
+## Hello {{URL}} need not to be quoted becuase this is not starting with variable
+## {{URL} Hello , then yes it need to be quoted since it is starting with a variable
+## Booleans while quoted considers as string,
+## Number quoted are not consider as string, those are still consider as numbers.
